@@ -32,9 +32,15 @@ class User extends CI_Controller
         $this->load->helper(array('form', 'url'));
     }
 
+    public function tests()
+    {
+        $this->load->view('test');
+    }
+
     /*
     * load login view
-    * */
+    */
+
     public function loadLogin()
     {
         $this->load->view('login');
@@ -42,7 +48,7 @@ class User extends CI_Controller
 
     /*
      * load register view
-     * */
+     */
     public function loadRegister()
     {
         $this->load->view('register');
@@ -52,7 +58,7 @@ class User extends CI_Controller
      * take input from user form
      * check input using form validation
      * redirect to suitable page with suitable message
-     * */
+     */
     public function register()
     {
         $this->form_validation->set_rules('email', 'email', 'required|valid_email|is_unique[user.user_email]');
@@ -68,8 +74,9 @@ class User extends CI_Controller
             $email = $this->input->post('email');
             $age = $this->input->post('age');
             $city = $this->input->post('city');
-            $password = sha1($this->input->post('password'));
-//array for data 
+            //$password_hash = password_hash($this->input->post('password'), PASSWORD_BCRYPT);
+            $password = password_hash($this->input->post('password'), PASSWORD_DEFAULT);
+            //array for data
             $data = array(
                 'user_name' => $user_name,
                 'user_email' => $email,
@@ -107,30 +114,32 @@ class User extends CI_Controller
         if ($this->form_validation->run() == FALSE) {
             $this->load->view('login');
         } else {
+            $password = $this->input->post('password');
             $email = $this->input->post('email');
-            $password = sha1($this->input->post('password'));
-            $data = array(
-                'user_email' => $email,
-                'user_password' => $password,
-            );
-            $info = $this->user_model->loginUser($email, $password);
+            $info = $this->user_model->loginUser($email);
+            print_r($info);
+            echo '<br>';
+            echo $info['user_password'];
+            echo '<br>';
             if ($info) {
-                $this->session->set_userdata('user_id', $info['user_id']);
-                $this->session->set_userdata('user_email', $info['user_email']);
-                $this->session->set_userdata('user_name', $info['user_name']);
-                $this->session->set_userdata('user_age', $info['user_age']);
-                $this->session->set_userdata('user_city', $info['user_city']);
-                redirect('lists/index');
+                if (password_verify($password, $info['user_password'])) {
+                    $this->session->set_userdata('user_id', $info['user_id']);
+                    $this->session->set_userdata('user_email', $info['user_email']);
+                    $this->session->set_userdata('user_name', $info['user_name']);
+                    $this->session->set_userdata('user_age', $info['user_age']);
+                    $this->session->set_userdata('user_city', $info['user_city']);
+                    redirect('lists/index');
+                }
             } else {
                 $this->session->set_userdata('error_msglog', 'Error occured,Try again.');
                 redirect('user/loadLogin');
             }
         }
-    }//
+    }
 
     /*
      * destroy all session and redirct user to log in page
-     * */
+     */
     public function logout()
     {
         $this->session->sess_destroy();

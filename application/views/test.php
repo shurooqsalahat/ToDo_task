@@ -7,22 +7,16 @@
     </head>
 
     <script>
-        $( function() {
-            $.ajax({
-                type: "POST",
-                url: "<?php echo  base_url();?>lists/update_list",
-                data: {id:'32'},
-                success: function() {
-                    alert(' in success function');
-                    window.location.href = "<?php echo base_url();?>lists/index";
 
-
-                }
-            });
-        });
         </script>
 </html>
 <body>
 
-"<?php echo  base_url();?>lists/update_list"
+<?php $password="12345";
+$password_hash = password_hash($password, PASSWORD_BCRYPT);
+echo $password_hash.'</br>';
+
+$res = password_verify( $password, $password_hash );
+echo $res; ?>
+
 </body>

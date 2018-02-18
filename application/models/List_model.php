@@ -19,9 +19,10 @@ class list_model extends CI_model
     update list or task in database.
     args: array of new data
     */
-    public function updateList($id, $list)
+    public function updateList($id, $list, $user_id)
     {
         $this->db->where('event_id', $id);
+        $this->db->where('user_id', $user_id);
         $this->db->update('lists', $list);
     }
 
@@ -64,9 +65,10 @@ class list_model extends CI_model
     delete list from database .
     args : event id.
     */
-    public function deleteList($id)
+    public function deleteList($id, $user_id)
     {
         $this->db->where('event_id', $id);
+        $this->db->where('user_id', $user_id);
         $this->db->delete('lists');
     }
 }

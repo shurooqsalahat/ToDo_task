@@ -2,6 +2,7 @@
 
 class User_model extends CI_model
 {
+
     /*
     Register and insert user in database.
     args: array of user info.
@@ -36,12 +37,11 @@ class User_model extends CI_model
     To login user , check input data and giv sutaible message
     args: email and password
     */
-    public function loginUser($email, $password)
+    public function loginUser($email)
     {
         $this->db->select('*');
         $this->db->from('user');
         $this->db->where('user_email', $email);
-        $this->db->where('user_password', $password);
         if ($query = $this->db->get()) {
             return $query->row_array();
         } else {

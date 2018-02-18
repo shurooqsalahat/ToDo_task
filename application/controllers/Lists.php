@@ -78,7 +78,7 @@ class Lists extends CI_Controller
     {
         if ($this->session->userdata('user_id')) {
             $id = $this->input->post('id');
-            $this->list_model->deleteList($id);
+            $this->list_model->deleteList($id, $this->session->userdata('user_id'));
         } else {
             redirect(base_url() . 'user/loadLogin');
 
@@ -102,15 +102,15 @@ class Lists extends CI_Controller
                 $arr = array(
                     'is_completed' => '0'
                 );
-                $this->list_model->updateList($id, $arr);
+                $this->list_model->updateList($id, $arr, $this->session->userdata('user_id'));
             } else {
                 echo 'not';
                 $arr = array(
                     'is_completed' => '1'
                 );
-                $this->list_model->updateList($id, $arr);
+                $this->list_model->updateList($id, $arr, $this->session->userdata('user_id'));
             }
-        }else{
+        } else {
             redirect(base_url() . 'user/loadLogin');
         }
 
@@ -118,4 +118,3 @@ class Lists extends CI_Controller
     }
 }
 
-?>
