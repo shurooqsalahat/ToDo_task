@@ -27,15 +27,15 @@ class list_model extends CI_model
     }
 
     /*
-    get all list for specific user
+    get all list for specific user which is deleted is 0 'Not deleted '
     args: User id
-
     */
     public function getList($user_id)
     {
         $this->db->select('*');
         $this->db->from('lists');
         $this->db->where('user_id', $user_id);
+        $this->db->where('is_deleted', '0');
         if ($query = $this->db->get()) {
             return $query->result_array();
         } else {
@@ -47,7 +47,7 @@ class list_model extends CI_model
     return if this list is completed or not .
     args: event Id you want to check
 
-    */
+        */
     public function getStatus($id)
     {
         $this->db->select('is_completed');
@@ -62,13 +62,15 @@ class list_model extends CI_model
 
 
     /*
-    delete list from database .
+    delete list from database using Soft delete.
+    update is_deleted field to 1.
     args : event id.
     */
-    public function deleteList($id, $user_id)
+    public function deleteList($id, $user_id, $list)
     {
         $this->db->where('event_id', $id);
         $this->db->where('user_id', $user_id);
-        $this->db->delete('lists');
+        $this->db->update('lists', $list);
     }
+
 }

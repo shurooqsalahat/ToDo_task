@@ -26,7 +26,6 @@ class User extends CI_Controller
         parent::__construct();
         $this->load->model('user_model');
         $this->load->library('session');
-
         $this->load->library('form_validation');
         $this->load->library('email');
         $this->load->helper(array('form', 'url'));
@@ -61,13 +60,14 @@ class User extends CI_Controller
      */
     public function register()
     {
-        $this->form_validation->set_rules('email', 'email', 'required|valid_email|is_unique[user.user_email]');
+        $this->form_validation->set_rules('email', 'email', 'required');
         $this->form_validation->set_rules('password', 'password', 'required');
         $this->form_validation->set_rules('age', 'age', 'required');
         $this->form_validation->set_rules('city', 'city', 'required');
         $this->form_validation->set_rules('username', 'username', 'required');
         if ($this->form_validation->run() == FALSE) {
-            redirect('user/loadRegister');
+
+            $this->load->view('register');
         } else {
 
             $user_name = $this->input->post('username');
@@ -138,7 +138,7 @@ class User extends CI_Controller
     }
 
     /*
-     * destroy all session and redirct user to log in page
+     * destroy all session and redirect user to log in page
      */
     public function logout()
     {

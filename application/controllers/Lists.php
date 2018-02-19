@@ -61,6 +61,8 @@ class Lists extends CI_Controller
             $event['event_name'] = $this->input->post('t_name');
             $event['user_id'] = $this->session->userdata('user_id');
             $event['is_completed'] = '0';
+            $event['created_at'] = date("Y-m-d") . ' ' . date("h:i:sa");
+            $event['created_by'] = $this->session->userdata('user_id');
             $this->list_model->addList($event);
             $list_data = $this->list_model->getList($this->session->userdata('user_id'));
             $this->session->set_userdata('lists', $list_data);
@@ -71,14 +73,19 @@ class Lists extends CI_Controller
     }
 
     /*
-     * delete list from database
+     * delete list from database using soft delete
      *  take input from user and call delete_list from lists model
      */
     public function deleteList()
     {
         if ($this->session->userdata('user_id')) {
             $id = $this->input->post('id');
-            $this->list_model->deleteList($id, $this->session->userdata('user_id'));
+            $arr = array(
+                'is_deleted' => '1',
+                'delete_at' => date("Y-m-d") . ' ' . date("h:i:sa"),
+                'delete_by' => $this->session->userdata('user_id')
+            );
+            $this->list_model->deleteList($id, $this->session->userdata('user_id'), $arr);
         } else {
             redirect(base_url() . 'user/loadLogin');
 
@@ -100,13 +107,17 @@ class Lists extends CI_Controller
             if ($res['0']['is_completed'] == 1) {
                 echo 'complete';
                 $arr = array(
-                    'is_completed' => '0'
+                    'is_completed' => '0',
+                    'update_at' => date("Y-m-d") . ' ' . date("h:i:sa"),
+                    'update_by' => $this->session->userdata('user_id')
                 );
                 $this->list_model->updateList($id, $arr, $this->session->userdata('user_id'));
             } else {
                 echo 'not';
                 $arr = array(
-                    'is_completed' => '1'
+                    'is_completed' => '1',
+                    'update_at' => date("Y-m-d") . ' ' . date("h:i:sa"),
+                    'update_by' => $this->session->userdata('user_id')
                 );
                 $this->list_model->updateList($id, $arr, $this->session->userdata('user_id'));
             }
@@ -116,5 +127,6 @@ class Lists extends CI_Controller
 
 
     }
+
 }
 

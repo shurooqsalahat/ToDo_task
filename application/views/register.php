@@ -31,7 +31,7 @@
                 </div>
                 <?php
                 if (form_error('username')) {
-                    echo ' <div class="alert alert-danger wrap-input100  ">' . form_error('username') . '</div>';
+                    echo '<div class="alert alert-danger wrap-input100  ">' . form_error('username') . '</div>';
                 }
                 ?>
                 <div class="wrap-input100 validate-input m-t-85 m-b-35" data-validate="Enter email">
@@ -76,7 +76,7 @@
                 }
                 ?>
                 <div class="container-login100-form-btn">
-                    <input type="submit" value="Registre" class="login100-form-btn">
+                    <input type="submit" value="Register" class="login100-form-btn">
                 </div>
                 <ul class="login-more p-t-190">
                     <li class="m-b-8">
